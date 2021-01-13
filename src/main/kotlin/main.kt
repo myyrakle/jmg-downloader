@@ -95,8 +95,8 @@ fun main() {
     var hasNext = true
     while(hasNext) {
         // driver.manage().timeouts().implicitlyWait(2000, TimeUnit.SECONDS);
-        var second = 20L;
-        second += Random().nextLong() % 10
+        var second = 31L;
+        //second += Random().nextLong() % 10
 
         Thread.sleep(second * 1000);
 
