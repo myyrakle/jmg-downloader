@@ -1,3 +1,4 @@
+import org.openqa.selenium.By
 import org.openqa.selenium.JavascriptExecutor
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.chrome.ChromeDriver
@@ -37,7 +38,7 @@ button.click()
 driver.manage().timeouts().implicitlyWait(2000, TimeUnit.SECONDS);*/
 
 fun main() {
-    System.setProperty("webdriver.chrome.driver", "C:\\Users\\sssan\\Code\\Java\\j-downloader\\chromedriver.exe");
+    System.setProperty("webdriver.chrome.driver", "./chromedriver.exe");
 
     //val link = "https://m.joara.com/viewer?cid=Ni+ccy7qQiijC4A060ZEmg==&bookCode=1502867&sortno=1";
 
@@ -45,6 +46,7 @@ fun main() {
     val link = Scanner(System.`in`).nextLine()
 
     val text = StringBuilder();
+    var count = 1;
 
     val driver = ChromeDriver()
     // 창 최대화
@@ -57,6 +59,8 @@ fun main() {
     driver.findElementByCssSelector(".pc-guide-action > a").click()
     //driver.findElementByCssSelector(".action-bar > a").click()
 
+    Thread.sleep(5000);
+
     val ps = driver.findElementsByTagName("p")
     for(e in ps) {
         text.append(e.text)
@@ -64,27 +68,64 @@ fun main() {
     }
 
     // 다음화 버튼 뜨게 클릭
-    Thread.sleep(3000);
+    /*Thread.sleep(5000);
+
+    try {
+        driver.findElementsByCssSelector(".view-arrow")
+    } catch(e: Exception) {
+        driver.findElementByCssSelector(".viewScroll-Center").click();
+    }*/
+
+
+    var title = ""
+
     driver.findElementByCssSelector(".viewScroll-Center").click();
-    val title = driver.findElementByCssSelector(".view-title > p").text
-    println("제목은 [${title}]이요")
+    if(title=="") {
+        title = driver.findElementByCssSelector(".view-title > p").text
+
+        title = arrayOf("\\", "/", ":", "*", "?", "\"", "<", ">", "|").fold(title) {
+            title, character -> title.replace(character, " ")
+        }
+
+        println("제목은 [${title}]이요")
+    }
 
     // first loop
 
     var hasNext = true
     while(hasNext) {
         // driver.manage().timeouts().implicitlyWait(2000, TimeUnit.SECONDS);
+        var second = 20L;
+        second += Random().nextLong() % 10
+
+        Thread.sleep(second * 1000);
+
         val ps = driver.findElementsByTagName("p")
         for(e in ps) {
             text.append(e.text)
             text.append("\n");
         }
 
-        var second = 20L;
-        second += Random().nextLong() % 10
-
-        Thread.sleep(second * 1000);
         hasNext = false
+
+        /*if(driver.findElements( By.cssSelector(".view-arrow > a") ).size != 0) {
+            println("다음화 버튼 활성화")
+            driver.findElementByCssSelector(".viewScroll-Center").click();
+            if(title=="") {
+                title = driver.findElementByCssSelector(".view-title > p").text
+                println("제목은 [${title}]이요")
+            }
+        }*/
+        /*try {
+            driver.findElementByCssSelector(".view-arrow > a").isEnabled
+        } catch(e: Exception) {
+            println("다음화 버튼 활성화")
+            driver.findElementByCssSelector(".viewScroll-Center").click();
+            if(title=="") {
+                title = driver.findElementByCssSelector(".view-title > p").text
+                println("제목은 [${title}]이요")
+            }
+        }*/
 
         val buttons = driver.findElementsByCssSelector(".view-arrow > a");
 
